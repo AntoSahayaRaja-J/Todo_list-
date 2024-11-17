@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>{{title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Removed Bootstrap and added custom styles -->
+  <style>
+    /* General Body Style */
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background-color: #a3a375;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    /* Wrapper to hold content */
+    .todo-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    /* Header Style */
+    h1 {
+      font-family: 'Times New Roman', Times, serif;
+      color: #2d3e50;
+      text-align: center; /* Center the title */
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Card Style */
+    .card {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.15);
+      background: #fff;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      padding: 20px;
+      transition: background 0.3s ease;
+    }
+
+    .card:hover {
+      background: #e6f7ff; /* Light Blue */
+    }
+
+    .card .title {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #4e73df;
+    }
+
+    .card .details {
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    .card .date {
+      color: #888;
+      font-size: 0.9em;
+    }
+
+    /* Submit Form Style */
+    .submit_form {
+      padding: 25px;
+      background: #fce4ec;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit_form input[type="submit"] {
+      background-color: #9e4edf;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit_form input[type="submit"]:hover {
+      background-color: #2d3e50;
+    }
+
+    /* Layout Styles */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+      justify-content: space-between;
+    }
+
+    .col-md-8, .col-md-3 {
+      padding: 0;
+    }
+
+    .col-md-8 {
+      flex: 0 0 65%;
+      padding-right: 30px;
+    }
+
+    .col-md-3 {
+      flex: 0 0 30%;
+      padding-left: 30px;
+    }
+
+    /* Card Alignment */
+    .col-md-8, .col-md-3 {
+      padding-right: 10px;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .form-container form {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* Add margin to bottom of form */
+    .form-container .submit_form {
+      margin-top: 30px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .col-md-8, .col-md-3 {
+        flex: 0 0 100%;
+        padding: 0;
+      }
+
+      .col-md-8 {
+        margin-bottom: 20px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="todo-wrapper">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-info">
+          <strong>{{ message }}</strong>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Centered Title -->
+    <h1>TODO LIST</h1>
+    <hr />
+
+    <div class="row">
+      <!-- Todo List Column -->
+      <div class="col-md-8">
+        {% for i in list %}
+          <div class="card">
+            <div class="title">{{ i.title }}</div>
+            <hr />
+            <div class="date">{{ i.date }}</div>
+            <hr />
+            <div class="details">{{ i.details }}</div>
+            <br />
+            <form action="/del/{{ i.id }}" method="POST" style="text-align: right; padding-top: 10px;">
+              {% csrf_token %}
+              <button value="remove" type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span> &nbsp; Remove
+              </button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Spacer Column -->
+      <div class="col-md-1"></div>
+
+      <!-- Form Column -->
+      <div class="col-md-3 form-container">
+        <div class="submit_form">
+          <form method="POST">
+            {% csrf_token %}
+            {{ forms }}
+            <center>
+              <input type="submit" value="Submit" />
+            </center>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
